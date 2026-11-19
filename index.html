@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Sub-16: Fuerza, Potencia y Balón (Alto Rendimiento)</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #22c55e;
+            --accent-hover: #16a34a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --danger: #ef4444;
+            --blue-accent: #3b82f6;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 16px;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        header h1 {
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        header p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+        .day-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 2px;
+            text-align: center;
+        }
+        .day-box.highlight {
+            border-color: var(--accent);
+            background: rgba(34, 197, 94, 0.12);
+        }
+        .day-title {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+        .day-activity {
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 4px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .tab-btn.active {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+        .exercise-item {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        .exercise-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+            color: #ffffff;
+        }
+        .exercise-details {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .exercise-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .cone-diagram {
+            background: #0f172a;
+            border: 1px dashed var(--accent);
+            border-radius: 6px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #38bdf8;
+            margin: 8px 0 12px 0;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+        .exercise-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+        .btn-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .btn-link:hover {
+            background: #1d4ed8;
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .checkbox-container input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+        .timer-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 8px 0;
+            font-family: monospace;
+        }
+        .timer-btns {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .timer-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: #334155;
+            color: white;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .timer-btn.primary {
+            background: var(--accent);
+            color: #000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Plan Sub-16: Fútbol Base</h1>
+        <p>Preparación Física: Fuerza, Potencia y Balón</p>
+    </header>
+
+    <div class="weekly-grid">
+        <div class="day-box"><div class="day-title">LUN</div><div class="day-activity" style="color:var(--blue-accent);">Club</div></div>
+        <div class="day-box highlight"><div class="day-title">MAR</div><div class="day-activity" style="color:var(--accent);">Fuerza</div></div>
+        <div class="day-box"><div class="day-title">MIÉ</div><div class="day-activity" style="color:var(--blue-accent);">Club</div></div>
+        <div class="day-box"><div class="day-title">JUE</div><div class="day-activity" style="color:var(--blue-accent);">Club</div></div>
+        <div class="day-box highlight"><div class="day-title">VIE</div><div class="day-activity" style="color:var(--accent);">Potencia</div></div>
+        <div class="day-box"><div class="day-title">SÁB</div><div class="day-activity" style="color:var(--danger);">Partido</div></div>
+        <div class="day-box highlight"><div class="day-title">DOM</div><div class="day-activity" style="color:var(--accent);">Balón</div></div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="tab-btn active" onclick="switchTab('martes', this)">Martes: Fuerza</div>
+        <div class="tab-btn" onclick="switchTab('viernes', this)">Viernes: Potencia</div>
+        <div class="tab-btn" onclick="switchTab('finde', this)">Finde: Balón</div>
+    </div>
+
+    <!-- MARTES -->
+    <div id="martes" class="section-content active">
+        <div class="card">
+            <h3>Martes: Fuerza Funcional & Prevención</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Descanso: 90s a 2 min entre series. Calidad de movimiento prioritaria.</p>
+            
+            <div class="exercise-item">
+                <div class="exercise-title">1. Sentadilla Goblet (Goblet Squat)</div>
+                <div class="exercise-details">3 series x 10-12 repeticiones</div>
+                <div class="exercise-desc">Mancuerna pegada al pecho, espalda neutra, profundidad hasta que los codos toquen la cara interna de las rodillas.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/watch?v=dB3TCDQFUtQ" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">2. Peso Muerto Rumano con Mancuernas</div>
+                <div class="exercise-details">3 series x 10 repeticiones</div>
+                <div class="exercise-desc">Bisagra de cadera llevando el culo hacia atrás con rodillas fijas (semiflexionadas). Trabajo para la cadena posterior.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/watch?v=R2_V1vJpAEE" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">3. Zancadas Estáticas o Caminando (Lunges)</div>
+                <div class="exercise-details">3 series x 8 repeticiones por pierna</div>
+                <div class="exercise-desc">Paso amplio al frente manteniendo la rodilla alineada con la punta del pie. Tocar suelo suavemente con la rodilla trasera.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=zancadas+lunges+correctas+tecnica" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">4. Nordic Curl Asistido (Prevención Isquiotibiales)</div>
+                <div class="exercise-details">3 series x 5-6 repeticiones</div>
+                <div class="exercise-desc">Fijar tobillos y frenar la caída hacia adelante reteniendo con los isquiotibiales. Amortiguar al final con las manos.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/watch?v=vV7Yp2kK7q4" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">5. Plancha Abdominal Frontal + Lateral</div>
+                <div class="exercise-details">3 series x 45 segundos</div>
+                <div class="exercise-desc">Bloqueo de core sin bascular la cadera. Estabilidad lumbar y abdominal para duelos en el campo.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=plancha+abdominal+correcta+tecnica+gimnasio" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIERNES -->
+    <div id="viernes" class="section-content">
+        <div class="card">
+            <h3>Viernes: Potencia, Pliometría & Tren Superior</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Realizar sin fatiga previa. Aterrizajes suaves absorbiendo el impacto.</p>
+            
+            <div class="exercise-item">
+                <div class="exercise-title">1. Saltos al Cajón (Box Jumps)</div>
+                <div class="exercise-details">3 series x 6-8 saltos</div>
+                <div class="exercise-desc">Impulso explosivo de brazos hacia arriba. Aterrizaje flexible amortiguando con rodillas semiflexionadas.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/watch?v=52r_Ul5k04g" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">2. Saltos Horizontales a Pies Juntos (Broad Jumps)</div>
+                <div class="exercise-details">3 series x 6 saltos</div>
+                <div class="exercise-desc">Salto hacia adelante buscando la máxima distancia sin perder el equilibrio al aterrizar.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=broad+jump+salto+horizontal+tecnica" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">3. Skipping (5s) + Sprint Explosivo a 10m</div>
+                <div class="exercise-details">4 repeticiones (Descanso: 90s)</div>
+                <div class="exercise-desc">Frecuencia alta de piernas en el sitio y transición inmediata a máxima velocidad de aceleración.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=skipping+salida+velocidad+futbol+ejercicio" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">4. Flexiones de Pecho Tradicionales (Push-ups)</div>
+                <div class="exercise-details">3 series x 10-12 repeticiones</div>
+                <div class="exercise-desc">Mantener el cuerpo rígido como una tabla. Fuerza de empuje para ganar la posición y proteger el balón.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=flexiones+de+pecho+tecnica+correcta" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">5. Remo Invertido (TRX o Barra Baja)</div>
+                <div class="exercise-details">3 series x 10 repeticiones</div>
+                <div class="exercise-desc">Tracción horizontal llevando el pecho a la barra para equilibrar el hombro y la espalda alta.</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=remo+invertido+trx+barra+tecnica" target="_blank" class="btn-link">Ver vídeo directo 🎬</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINDE (BALÓN) -->
+    <div id="finde" class="section-content">
+        <div class="card">
+            <h3>Fin de Semana: Agilidad & Técnica con Balón</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Pautas: 3 series x 30s de trabajo por 30-45s de descanso.</p>
+
+            <div class="exercise-item">
+                <div class="exercise-title">1. Eslalon Zig-Zag (Borde Interno y Externo)</div>
+                <div class="exercise-details">3 series x 30 segundos</div>
+                <div class="exercise-desc">Conducción rápida cambiando de dirección entre conos ajustados. Apoyos cortos y frecuentes.</div>
+                <div class="cone-diagram">DISPOSICIÓN DE CONOS:
+[SALIDA] ➔ 🟠 1.5m ➔ 🟠 1.5m ➔ 🟠 1.5m ➔ 🟠 1.5m ➔ 🟠 1.5m ➔ 🟠 ➔ [SPRINT 5m]
+(6 conos en línea recta con 1.5 metros de separación entre sí)</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=conduccion+de+balon+eslalon+conos+futbol" target="_blank" class="btn-link">Ver vídeo demostración 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">2. Pase Lateral In-Out Rodeando Conos</div>
+                <div class="exercise-details">3 series x 30 segundos</div>
+                <div class="exercise-desc">Toques cortos rodeando cada cono de fuera hacia adentro con aceleración en el espacio intermedio.</div>
+                <div class="cone-diagram">DISPOSICIÓN DE CONOS:
+  🟠       🟠       🟠
+ ↗  ↘     ↗  ↘     ↗  ↘
+[ENTRADA] ➔ [ENTRADA] ➔ [ENTRADA]
+(3 pares de conos desfasados 1 metro formando pequeñas puertas)</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=ejercicio+conos+futbol+in+out+pies" target="_blank" class="btn-link">Ver vídeo demostración 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">3. Roll-Over / Pisotón y Arrastre de Planta</div>
+                <div class="exercise-details">3 series x 30 segundos</div>
+                <div class="exercise-desc">Arrastre transversal de balón utilizando la planta del pie cruzando la línea de conos.</div>
+                <div class="cone-diagram">DISPOSICIÓN DE CONOS:
+🟠 ──1m── 🟠 ──1m── 🟠 ──1m── 🟠
+   [ ⇄ ARRASTRE DE PLANTA EN LÍNEA LATERAL ⇄ ]</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=pisoton+arrastre+planta+balon+conos+futbol" target="_blank" class="btn-link">Ver vídeo demostración 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">4. Circuito en Ocho (8) en Espacio Reducido</div>
+                <div class="exercise-details">3 series x 30 segundos</div>
+                <div class="exercise-desc">Giro constante dibujando un 8 alrededor de 2 conos. Freno, cambio de pie y aceleración.</div>
+                <div class="cone-diagram">DISPOSICIÓN DE CONOS:
+       ( 🟠 Cono A )
+        /         \
+       /   ( 🔀 )  \
+      /             \
+       ( 🟠 Cono B )
+(2 conos separados exactamente a 3 metros de distancia)</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=conduccion+en+ocho+conos+futbol+entrenamiento" target="_blank" class="btn-link">Ver vídeo demostración 🎬</a>
+                </div>
+            </div>
+
+            <div class="exercise-item">
+                <div class="exercise-title">5. Recorte en Diagonal (Entrada y Salida Explosiva)</div>
+                <div class="exercise-details">3 series x 30 segundos</div>
+                <div class="exercise-desc">Entrada hacia el cono en diagonal, cambio de ritmo con freno en seco y enganche.</div>
+                <div class="cone-diagram">DISPOSICIÓN DE CONOS:
+   🟠         🟠
+  ╱  ╲       ╱  ╲
+ ╱    ╲     ╱    ╲
+🟠     🟠  🟠     🟠
+(4 conos en zigzag formando rectángulos a 2m de distancia)</div>
+                <div class="exercise-actions">
+                    <label class="checkbox-container"><input type="checkbox"> Completado</label>
+                    <a href="https://www.youtube.com/results?search_query=recorte+cambio+de+direccion+conos+futbol" target="_blank" class="btn-link">Ver vídeo demostración 🎬</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CRONÓMETRO DE DESCANSO -->
+    <div class="timer-box">
+        <h3 style="font-size: 1rem; color: var(--text-main);">⏱️ Cronómetro de Descanso entre Series</h3>
+        <div id="timerDisplay" class="timer-display">01:30</div>
+        <div class="timer-btns">
+            <button class="timer-btn" onclick="setTimer(30)">30s</button>
+            <button class="timer-btn" onclick="setTimer(60)">60s</button>
+            <button class="timer-btn primary" onclick="setTimer(90)">90s</button>
+            <button class="timer-btn" onclick="setTimer(120)">120s</button>
+            <button class="timer-btn" onclick="startTimer()" style="background:#22c55e; color:#000; font-weight:bold;">Iniciar</button>
+            <button class="timer-btn" onclick="resetTimer()" style="background:#ef4444; color:white;">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        let countdown;
+        let timeLeft = 90;
+
+        function updateTimerDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').innerText = 
+                (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+        }
+
+        function setTimer(seconds) {
+            clearInterval(countdown);
+            timeLeft = seconds;
+            updateTimerDisplay();
+        }
+
+        function startTimer() {
+            clearInterval(countdown);
+            countdown = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(countdown);
+                    alert("¡Tiempo finalizado! A por la siguiente serie.");
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
+            timeLeft = 90;
+            updateTimerDisplay();
+        }
+
+        updateTimerDisplay();
+    </script>
+</body>
+</html>
